@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mystarter/boredactivity/models/bored_activity_model.dart';
@@ -13,9 +15,15 @@ class BoredBloc extends Bloc<BoredEvent, BoredState> {
       emit(BoredLoading());
       try {
         final activity = await _boredService.getActivity();
-        emit(BoredLoaded(activityModelFromJson(activity)));
+        emit(
+          BoredLoaded(
+            activityModelFromJson(activity),
+          ),
+        );
       } catch (e) {
-        emit(BoredLoadingFailed(e.toString()));
+        emit(
+          BoredLoadingFailed(e.toString()),
+        );
       }
     });
   }

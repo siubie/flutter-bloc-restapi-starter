@@ -1,3 +1,1 @@
-Map<String, String> apiConstants = {
-  "base_url": "https://attendance.putraprima.id",
-};
+const String BASE_URL = "https://attendance.putraprima.id/api";

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mystarter/authentication/resources/authentication_repository.dart';
 import 'package:mystarter/bloc_observer.dart';
-import 'package:mystarter/boredactivity/bloc/bored_bloc.dart';
 import 'package:mystarter/boredactivity/resource/bored_service.dart';
 import 'package:mystarter/routes/index.dart';
 
@@ -12,36 +12,42 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AuthenticationService authenticationService = AuthenticationService();
+  BoredService boredService = BoredService();
+
+  late AppRouter _appRouter;
+
+  @override
+  void initState() {
+    super.initState();
+    _appRouter = AppRouter(authenticationService, boredService);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => BoredService(),
-        ),
+        RepositoryProvider.value(value: authenticationService),
+        RepositoryProvider.value(value: boredService),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<BoredBloc>(
-            create: (context) => BoredBloc(
-              RepositoryProvider.of<BoredService>(context),
-            )..add(
-                LoadApiEvent(),
-              ),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          onGenerateRoute: routes,
-        ),
+      child: MaterialApp(
+        title: "Trial OnGenerate Route",
+        onGenerateRoute: _appRouter.onGenerateRoute,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _appRouter.dispose();
+    super.dispose();
   }
 }
