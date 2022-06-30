@@ -21,7 +21,7 @@ class ActivityModel {
   });
 
   String activity;
-  String type;
+  dynamic type;
   dynamic participants;
   dynamic price;
   String link;

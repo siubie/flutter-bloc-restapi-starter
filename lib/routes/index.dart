@@ -33,7 +33,10 @@ class AppRouter {
       case BoredActivityScreen.Route:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: _boredBloc,
+            value: _boredBloc
+              ..add(
+                LoadApiEvent(),
+              ),
             child: const BoredActivityScreen(),
           ),
         );
